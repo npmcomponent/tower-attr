@@ -4,6 +4,9 @@
   "description": "Tower Attr component",
   "version": "0.0.1",
   "keywords": [],
+  "dependencies": {
+    "tower/operator": "*"
+  },
   "scripts": ["index.js"],
   "license": "MIT"
 }

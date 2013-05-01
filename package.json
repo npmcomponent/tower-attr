@@ -1,5 +1,8 @@
 {
   "name": "tower-attr",
   "version": "0.0.1",
-  "main": "./index.js"
+  "main": "./index.js",
+  "dependencies": {
+    "tower-operator": "*"
+  }
 }

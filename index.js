@@ -6,80 +6,50 @@
 var operator = require('tower-operator');
 
 /**
- * Expose `attr`.
+ * Expose `Attr`.
  */
 
-exports = module.exports = attr;
+module.exports = Attr;
 
 /**
- * Mixin `attr`.
- *
- * Example:
- *
- *    model.use(require('tower-attr'));
- *
- * @param {Object} statics Constructor object to mixin methods.
- * @api public
+ * Instantiate a new `Attr`.
  */
 
-function attr(statics) {
-  statics.attr = exports.attr;
-  statics.validate = exports.validate;
+function Attr(name, type, options){
+  if (!type) {
+    options = { type: 'string' };
+  } else if ('object' === typeof type) {
+    options = type;
+  } else {
+    options || (options = {});
+    options.type = type;
+  }
+
+  this.name = name;
+  this.type = options.type || 'string';
+
+  if (options.validators) this.validators = [];
+  if (options.alias) this.aliases = [ options.alias ];
+  else if (options.aliases) this.aliases = options.aliases;
+
+  // XXX: maybe it should allow any custom thing to be set?
 }
 
 /**
- * Define attr with the given `name` and `options`.
- *
- * @param {String} name
- * @param {Object} options
- * @return {Function} self
- * @api public
+ * Add validator to stack.
  */
 
-exports.attr = function(name, options){
-  options || (options = {});
-  options.type || (options.type = 'string');
-  options.name = name;
+Attr.prototype.validator = function(key, val){
+  var assert = operator(key);
 
-  // set?
-  this.attrs.push(options);
-  this.attrs[options.name] = options;
+  // lazily instantiate validators
+  (this.validators || (this.validators = []))
+    .push(function validate(obj, fn){
+      if (!assert(obj[key], val))
+        obj.errors.push('XXX: Invalid attribute');
+    });
+}
 
-  // implied pk
-  if ('_id' === name || 'id' === name) {
-    options.primaryKey = true;
-    this.primaryKey = name;
-  }
-
-  // getter / setter method
-  this.prototype[name] = function(val){
-    if (0 === arguments.length) {
-      if (undefined === this.attrs[name] && options.defaultValue)
-        return this.attrs[name] = options.defaultValue();
-      else
-        return this.attrs[name];
-    }
-
-    var prev = this.attrs[name];
-    this.dirty[name] = val;
-    this.attrs[name] = val;
-    this.constructor.emit('change ' + name, this, val, prev);
-    this.emit('change ' + name, val, prev);
-    return this;
-  };
-
-  return this;
-};
-
-/**
- * Add validation `fn()`.
- *
- * @param {Function} fn
- * @return {Function} self
- * @api public
- */
-
-exports.validate = function(fn){
-  this.validators.push(fn);
-  return this;
-};
+Attr.prototype.alias = function(key){
+  (this.aliases || (this.aliases = [])).push(key);
+}

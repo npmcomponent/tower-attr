@@ -40,12 +40,13 @@ function Attr(name, type, options){
  */
 
 Attr.prototype.validator = function(key, val){
-  var assert = operator(key);
+  var assert = operator(key)
+    , self = this;
 
   // lazily instantiate validators
   (this.validators || (this.validators = []))
     .push(function validate(obj, fn){
-      if (!assert(obj[key], val))
+      if (!assert(obj.get(self.name), val))
         obj.errors.push('XXX: Invalid attribute');
     });
 }

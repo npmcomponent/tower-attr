@@ -62,5 +62,5 @@ Attr.prototype.validate = function(obj, fn){
     validate(obj);
   });
 
-  fn(); // XXX
+  if (fn) fn(); // XXX
 }

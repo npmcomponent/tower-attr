@@ -2,7 +2,8 @@ var Attr = 'undefined' === typeof window
   ? require('..')
   : require('tower-attr'); // how to do this better?
 
-var assert = require('assert');
+var validator = Attr.validator
+  , assert = require('assert');
 
 describe('Attr', function(){
   it('should define', function(){
@@ -57,5 +58,22 @@ describe('Attr', function(){
     two(new Attr('title', { validators: [] }));
     // XXX: doesn't handle this, waiting to see if it should.
     // two(new Attr({ name: 'title', validators: [] }));
+  });
+
+  describe('validators', function(){
+    it('should validate present', function(){
+      var attr = new Attr('title')
+      attr.validator('present');
+
+      var record = { get: function() { return this.title }, errors: [] };
+      record.title = 'hello';
+      attr.validate(record);
+      assert(0 === record.errors.length);
+
+      record.title = null;
+      attr.validate(record);
+      assert(1 === record.errors.length);
+      assert('Invalid attribute: title' === record.errors['title']);
+    });
   });
 });

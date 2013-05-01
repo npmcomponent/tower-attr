@@ -4,6 +4,7 @@
  */
 
 var operator = require('tower-operator')
+  , validator = require('tower-validator').ns('attr')
   , text = require('tower-inflector');
 
 text('attr', 'Invalid attribute: {{name}}');
@@ -86,30 +87,13 @@ Attr.prototype.validate = function(obj, fn){
   if (fn) fn(); // XXX
 }
 
-/**
- * Define a reusable attribute validator.
- *
- * @param {String} name
- * @param {Function} fn
- */
-
-function validator(name, fn) {
-  if (1 === arguments.length)
-    return validator.collection[name];
-
-  validator.collection[name] = fn;
-  validator.collection.push(fn);
-}
-
-validator.collection = [];
-
 // XXX: maybe this goes into a separate module.
-validator('present', function(attr, obj){
+exports.validator('present', function(attr, obj){
   return null != obj.get(attr.name);
 });
 
 ['eq', 'neq', 'in', 'nin', 'contains', 'gte', 'gt', 'lt', 'lte'].forEach(function(key){
-  validator(key, function(attr, obj, val){
+  exports.validator(key, function(attr, obj, val){
     return operator(key)(obj.get(attr.name), val);
   });
 });

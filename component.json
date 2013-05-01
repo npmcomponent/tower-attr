@@ -6,7 +6,8 @@
   "keywords": [],
   "dependencies": {
     "tower/operator": "*",
-    "tower-inflector": "*"
+    "tower/validator": "*",
+    "tower/inflector": "*"
   },
   "scripts": ["index.js"],
   "license": "MIT"

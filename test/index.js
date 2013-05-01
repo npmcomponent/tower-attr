@@ -3,6 +3,7 @@ var Attr = 'undefined' === typeof window
   : require('tower-attr'); // how to do this better?
 
 var validator = Attr.validator
+  , text = require('tower-inflector')
   , assert = require('assert');
 
 describe('Attr', function(){
@@ -61,6 +62,10 @@ describe('Attr', function(){
   });
 
   describe('validators', function(){
+    before(function(){
+      text('attr', 'Invalid attribute: {{name}}');
+    });
+
     it('should validate present', function(){
       var attr = new Attr('title')
       attr.validator('present');

@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
-    "tower/operator": "*"
+    "tower/operator": "*",
+    "tower-inflector": "*"
   },
   "scripts": ["index.js"],
   "license": "MIT"

@@ -3,7 +3,10 @@
  * Module dependencies.
  */
 
-var operator = require('tower-operator');
+var operator = require('tower-operator')
+  , text = require('tower-inflector');
+
+text('attr', 'Invalid attribute: {{name}}');
 
 /**
  * Expose `Attr`.
@@ -33,6 +36,9 @@ function Attr(name, type, options){
 
   this.name = name;
   this.type = options.type || 'string';
+  // XXX: I18n path, maybe should be
+  // model.user.attr.
+  this.path = options.path || 'attr.' + name;
 
   if (options.validators) this.validators = [];
   if (options.alias) this.aliases = [ options.alias ];
@@ -53,7 +59,10 @@ Attr.prototype.validator = function(key, val){
     .push(function validate(attr, obj, fn){
       if (!assert(attr, obj, val)) {
         // XXX: hook into `tower-inflector` for I18n
-        var error = 'Invalid attribute: ' + attr.name;
+        var error = text.has(attr.path)
+          ? text(attr.path).render(attr)
+          : text('attr').render(attr);
+
         obj.errors[attr.name] = error;
         obj.errors.push(error);
       }

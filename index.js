@@ -53,3 +53,14 @@ Attr.prototype.validator = function(key, val){
 Attr.prototype.alias = function(key){
   (this.aliases || (this.aliases = [])).push(key);
 }
+
+Attr.prototype.validate = function(obj, fn){
+  if (!this.validators) return fn();
+
+  // XXX: part-async-series
+  this.validators.forEach(function(validate){
+    validate(obj);
+  });
+
+  fn(); // XXX
+}

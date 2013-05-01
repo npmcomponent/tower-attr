@@ -1,0 +1,9 @@
+{
+  "name": "tower-attr",
+  "repo": "tower/attr",
+  "description": "Tower Attr component",
+  "version": "0.0.1",
+  "keywords": [],
+  "scripts": ["index.js"],
+  "license": "MIT"
+}

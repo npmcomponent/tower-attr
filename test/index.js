@@ -62,6 +62,16 @@ describe('Attr', function(){
     // two(new Attr({ name: 'title', validators: [] }));
   });
 
+  it('should allow default values', function(){
+    function compare(val, attr) {
+      assert(val === attr.value);
+    }
+
+    compare(false, new Attr('completed', 'boolean', false));
+    compare(true, new Attr('completed', 'boolean', true));
+    compare(undefined, new Attr('completed', 'boolean'));
+  });
+
   describe('validators', function(){
     before(function(){
       text('attr', 'Invalid attribute: {{name}}');

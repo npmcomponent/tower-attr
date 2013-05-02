@@ -70,7 +70,11 @@ function Attr(name, type, options){
   } else if ('object' === typeof type) {
     options = type;
   } else {
-    options || (options = {});
+    if ('object' !== typeof options) {
+      options = { value: options };
+    } else {
+      options || (options = {}); 
+    }
     options.type = type;
   }
 
@@ -79,6 +83,7 @@ function Attr(name, type, options){
   // XXX: I18n path, maybe should be
   // model.user.attr.
   this.path = options.path || 'attr.' + name;
+  if (undefined !== options.value) this.value = options.value;
 
   if (options.validators) this.validators = [];
   if (options.alias) this.aliases = [ options.alias ];
@@ -93,6 +98,8 @@ function Attr(name, type, options){
 
 Attr.prototype.validator = function(key, val){
   var assert = validator(key);
+  // XXX: need some sort of error handling so it's
+  // easier to tell `assert` is undefined.
 
   // lazily instantiate validators
   (this.validators || (this.validators = []))

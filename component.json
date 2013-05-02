@@ -7,6 +7,7 @@
   "dependencies": {
     "tower/operator": "*",
     "tower/validator": "*",
+    "tower-emitter": "*",
     "tower/inflector": "*"
   },
   "scripts": ["index.js"],

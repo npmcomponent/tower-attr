@@ -1,8 +1,9 @@
-var Attr = 'undefined' === typeof window
+var attr = 'undefined' === typeof window
   ? require('..')
   : require('tower-attr'); // how to do this better?
 
-var validator = Attr.validator
+var Attr = attr.Attr
+  , validator = attr.validator
   , text = require('tower-inflector')
   , assert = require('assert');
 

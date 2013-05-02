@@ -3,23 +3,61 @@
  * Module dependencies.
  */
 
-var operator = require('tower-operator')
+var Emitter = require('tower-emitter')
   , validator = require('tower-validator').ns('attr')
   , text = require('tower-inflector');
 
 text('attr', 'Invalid attribute: {{name}}');
 
 /**
+ * Expose `attr`.
+ */
+
+exports = module.exports = attr;
+
+/**
  * Expose `Attr`.
  */
 
-exports = module.exports = Attr;
+exports.Attr = Attr;
+
+// XXX:
+// module.exports = attr;
+// attr('user.email')
+// attr.on('define', function(name, obj));
 
 /**
  * Expose `validator`.
  */
 
 exports.validator = validator;
+
+/**
+ * Expose `collection`.
+ */
+
+exports.collection = [];
+
+/**
+ * Get an `Attr`.
+ */
+
+function attr(name, type, options) {
+  if (exports.collection[name])
+    return exports.collection[name];
+
+  var instance = new Attr(name, type, options);
+  exports.collection[name] = instance;
+  exports.collection.push(instance);
+  exports.emit('define', name, instance);
+  return instance;
+}
+
+/**
+ * Mixin `Emitter`.
+ */
+
+Emitter(exports);
 
 /**
  * Instantiate a new `Attr`.

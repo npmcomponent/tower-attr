@@ -5,7 +5,8 @@
 
 var Emitter = require('tower-emitter')
   , validator = require('tower-validator').ns('attr')
-  , text = require('tower-inflector');
+  , text = require('tower-inflector')
+  , validators = require('./lib/validators');
 
 text('attr', 'Invalid attribute: {{name}}');
 
@@ -125,13 +126,4 @@ Attr.prototype.validate = function(obj, fn){
   if (fn) fn(); // XXX
 }
 
-// XXX: maybe this goes into a separate module.
-exports.validator('present', function(attr, obj){
-  return null != obj.get(attr.name);
-});
-
-['eq', 'neq', 'in', 'nin', 'contains', 'gte', 'gt', 'lt', 'lte'].forEach(function(key){
-  exports.validator(key, function(attr, obj, val){
-    return operator(key)(obj.get(attr.name), val);
-  });
-});
+validators(exports);

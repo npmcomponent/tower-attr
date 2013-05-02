@@ -10,6 +10,6 @@
     "tower-emitter": "*",
     "tower/inflector": "*"
   },
-  "scripts": ["index.js"],
+  "scripts": ["index.js", "lib/validators.js"],
   "license": "MIT"
 }

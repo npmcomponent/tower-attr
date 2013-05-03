@@ -6,6 +6,7 @@
 var Emitter = require('tower-emitter')
   , validator = require('tower-validator').ns('attr')
   , text = require('tower-inflector')
+  , type = require('tower-type')
   , validators = require('./lib/validators');
 
 text('attr', 'Invalid attribute: {{name}}');
@@ -131,6 +132,18 @@ Attr.prototype.validate = function(obj, fn){
   });
 
   if (fn) fn(); // XXX
+}
+
+/**
+ * Convert a value into a proper form.
+ *
+ * Typecasting.
+ *
+ * @param {Mixed} val
+ */
+
+Attr.prototype.typecast = function(val){
+  return type(this.type).sanitize(val);
 }
 
 validators(exports);

@@ -7,8 +7,9 @@
   "dependencies": {
     "tower/operator": "*",
     "tower/validator": "*",
-    "tower-emitter": "*",
-    "tower/inflector": "*"
+    "tower/emitter": "*",
+    "tower/inflector": "*",
+    "tower/type": "*"
   },
   "scripts": ["index.js", "lib/validators.js"],
   "license": "MIT"

@@ -6,6 +6,7 @@
     "tower-operator": "*",
     "tower-validator": "*",
     "tower-emitter": "*",
-    "tower-inflector": "*"
+    "tower-inflector": "*",
+    "tower-type": "*"
   }
 }

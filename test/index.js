@@ -72,6 +72,13 @@ describe('Attr', function(){
     compare(undefined, new Attr('completed', 'boolean'));
   });
 
+  it('should typecast', function(){
+    var attr = new Attr('tags', 'array');
+    assert.deepEqual([ 'x' ], attr.typecast('x'));
+    assert.deepEqual([ 'x', 'y' ], attr.typecast([ 'x', 'y' ]));
+    assert.deepEqual([ 'x', 'y' ], attr.typecast('x,y'));
+  });
+
   describe('validators', function(){
     before(function(){
       text('attr', 'Invalid attribute: {{name}}');

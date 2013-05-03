@@ -1,7 +1,5 @@
 # Tower Attr
 
-Idea, not quite there yet.
-
 ## Installation
 
 node.js:

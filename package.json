@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "main": "./index.js",
   "dependencies": {
-    "tower-operator": "*",
     "tower-validator": "*",
     "tower-emitter": "*",
     "tower-inflector": "*",

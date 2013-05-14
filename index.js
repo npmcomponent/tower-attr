@@ -46,7 +46,7 @@ exports.collection = [];
  */
 
 function attr(name, type, options) {
-  if (exports.collection[name])
+  if (undefined === type && exports.collection[name])
     return exports.collection[name];
 
   var instance = new Attr(name, type, options);
@@ -68,8 +68,8 @@ Emitter(exports);
  */
 
 exports.ns = function(ns){
-  function attr(name) {
-    return exports(ns + '.' + name);
+  function attr(name, type, options) {
+    return exports(ns + '.' + name, type, options);
   }
 
   // XXX: copy functions?

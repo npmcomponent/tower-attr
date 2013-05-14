@@ -7,7 +7,7 @@ var Emitter = require('tower-emitter')
   , validator = require('tower-validator').ns('attr')
   , text = require('tower-inflector')
   , type = require('tower-type')
-  , kindof = require('type-component')
+  , kindof = 'undefined' === typeof window ? require('type-component') : require('type')
   , validators = require('./lib/validators');
 
 text('attr', 'Invalid attribute: {{name}}');

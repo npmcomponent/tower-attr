@@ -38,6 +38,34 @@ describe('Attr', function(){
     assert('string' === attr.type);
   });
 
+  describe('default value', function(){
+    it('should allow default values', function(){
+      function compare(val, attr) {
+        assert(val === attr.value);
+      }
+
+      compare(false, new Attr('completed', 'boolean', false));
+      compare(true, new Attr('completed', 'boolean', true));
+      compare(undefined, new Attr('completed', 'boolean'));
+    });
+
+    it('should concat array if default', function(){
+      var array = [1, 2, 3];
+      var attr = new Attr('tags', 'array', array);
+      var val = attr.apply();
+      assert('1,2,3' === val.join(','));
+      assert(array !== val); // that it's a new one.
+      assert(array === attr.value); // that the passed on is the same
+    });
+
+    it('should apply type "function" to object', function(){
+      var attr = new Attr('tags', function(obj){
+        return obj.x;
+      });
+      assert('foo' === attr.apply({ x: 'foo' }));
+    });
+  });
+
   it('should handle param overloading', function(){
     function one(attr) {
       assert('title' === attr.name);
@@ -60,16 +88,6 @@ describe('Attr', function(){
     two(new Attr('title', { validators: [] }));
     // XXX: doesn't handle this, waiting to see if it should.
     // two(new Attr({ name: 'title', validators: [] }));
-  });
-
-  it('should allow default values', function(){
-    function compare(val, attr) {
-      assert(val === attr.value);
-    }
-
-    compare(false, new Attr('completed', 'boolean', false));
-    compare(true, new Attr('completed', 'boolean', true));
-    compare(undefined, new Attr('completed', 'boolean'));
   });
 
   it('should typecast', function(){

@@ -6,6 +6,7 @@
     "tower-validator": "*",
     "tower-emitter": "*",
     "tower-inflector": "*",
-    "tower-type": "*"
+    "tower-type": "*",
+    "type-component": "0.0.1"
   }
 }

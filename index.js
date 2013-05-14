@@ -7,6 +7,7 @@ var Emitter = require('tower-emitter')
   , validator = require('tower-validator').ns('attr')
   , text = require('tower-inflector')
   , type = require('tower-type')
+  , kindof = require('type-component')
   , validators = require('./lib/validators');
 
 text('attr', 'Invalid attribute: {{name}}');
@@ -68,15 +69,21 @@ Emitter(exports);
 function Attr(name, type, options){
   if (!type) {
     options = { type: 'string' };
-  } else if ('object' === typeof type) {
-    options = type;
   } else {
-    if ('object' !== typeof options) {
-      options = { value: options };
+    var kind = kindof(type);
+    if ('object' === kind) {
+      options = type;
+    } else if ('function' === kind) {
+      options = { value: type };
+      // XXX: array too
     } else {
-      options || (options = {}); 
+      if ('object' !== kindof(options)) {
+        options = { value: options };
+      } else {
+        options || (options = {}); 
+      }
+      options.type = type;
     }
-    options.type = type;
   }
 
   this.name = name;
@@ -84,7 +91,11 @@ function Attr(name, type, options){
   // XXX: I18n path, maybe should be
   // model.user.attr.
   this.path = options.path || 'attr.' + name;
-  if (undefined !== options.value) this.value = options.value;
+  if (undefined !== options.value) {
+    this.value = options.value;
+    this.hasDefaultValue = true;
+    this.defaultType = kindof(options.value);
+  }
 
   if (options.validators) this.validators = [];
   if (options.alias) this.aliases = [ options.alias ];
@@ -144,6 +155,30 @@ Attr.prototype.validate = function(obj, fn){
 
 Attr.prototype.typecast = function(val){
   return type(this.type).sanitize(val);
+}
+
+/**
+ * Get default value.
+ *
+ * @param {Mixed} obj the object/record/instance to use
+ *    in computing the default value (if it's a function).
+ */
+
+Attr.prototype.apply = function(obj){
+  if (!this.hasDefaultValue) return;
+
+  // XXX: this should be computed in the constructor.
+  switch (this.defaultType) {
+    case 'function':
+      return this.value(obj);
+      break;
+    case 'array':
+      return this.value.concat();
+      break;
+    default:
+      return this.value;
+      break;
+  }
 }
 
 validators(exports);

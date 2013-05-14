@@ -63,6 +63,24 @@ function attr(name, type, options) {
 Emitter(exports);
 
 /**
+ * Create an `attr` function that
+ * just prepends a namespace to every key.
+ */
+
+exports.ns = function(ns){
+  function attr(name) {
+    return exports(ns + '.' + name);
+  }
+
+  // XXX: copy functions?
+  for (var key in exports) {
+    if ('function' === typeof exports[key])
+      attr[key] = exports[key];
+  }
+  return attr;
+}
+
+/**
  * Instantiate a new `Attr`.
  */
 

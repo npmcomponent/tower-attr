@@ -10,6 +10,10 @@
     "tower/inflector": "*",
     "tower/type": "*"
   },
+  "development": {
+    "timoxley/assert": "*",
+    "visionmedia/mocha": "*"
+  },
   "scripts": [
     "index.js",
     "lib/validators.js"

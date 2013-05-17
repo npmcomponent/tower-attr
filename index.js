@@ -3,12 +3,12 @@
  * Module dependencies.
  */
 
-var Emitter = require('tower-emitter')
-  , validator = require('tower-validator').ns('attr')
-  , text = require('tower-inflector')
-  , type = require('tower-type')
-  , kindof = 'undefined' === typeof window ? require('type-component') : require('type')
-  , validators = require('./lib/validators');
+var Emitter = require('tower-emitter');
+var validator = require('tower-validator').ns('attr');
+var text = require('tower-inflector');
+var type = require('tower-type');
+var kindof = 'undefined' === typeof window ? require('type-component') : require('type');
+var validators = require('./lib/validators');
 
 text('attr', 'Invalid attribute: {{name}}');
 
@@ -78,7 +78,7 @@ exports.ns = function(ns){
       attr[key] = exports[key];
   }
   return attr;
-}
+};
 
 /**
  * Instantiate a new `Attr`.
@@ -144,11 +144,11 @@ Attr.prototype.validator = function(key, val){
         obj.errors.push(error);
       }
     });
-}
+};
 
 Attr.prototype.alias = function(key){
   (this.aliases || (this.aliases = [])).push(key);
-}
+};
 
 Attr.prototype.validate = function(obj, fn){
   if (!this.validators) return fn();
@@ -161,7 +161,7 @@ Attr.prototype.validate = function(obj, fn){
   });
 
   if (fn) fn(); // XXX
-}
+};
 
 /**
  * Convert a value into a proper form.
@@ -173,7 +173,7 @@ Attr.prototype.validate = function(obj, fn){
 
 Attr.prototype.typecast = function(val){
   return type(this.type).sanitize(val);
-}
+};
 
 /**
  * Get default value.
@@ -197,6 +197,6 @@ Attr.prototype.apply = function(obj){
       return this.value;
       break;
   }
-}
+};
 
 validators(exports);

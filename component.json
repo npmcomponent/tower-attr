@@ -7,7 +7,7 @@
   "dependencies": {
     "tower/validator": "*",
     "tower/emitter": "*",
-    "tower/inflector": "*",
+    "tower/text": "*",
     "tower/type": "*",
     "component/type": "*"
   },

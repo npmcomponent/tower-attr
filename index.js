@@ -5,7 +5,7 @@
 
 var Emitter = require('tower-emitter');
 var validator = require('tower-validator').ns('attr');
-var text = require('tower-inflector');
+var text = require('tower-text');
 var type = require('tower-type');
 var kindof = 'undefined' === typeof window ? require('type-component') : require('type');
 var validators = require('./lib/validators');

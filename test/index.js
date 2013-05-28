@@ -4,7 +4,7 @@ var attr = 'undefined' === typeof window
 
 var Attr = attr.Attr
   , validator = attr.validator
-  , text = require('tower-inflector')
+  , text = require('tower-text')
   , assert = require('assert');
 
 describe('Attr', function(){

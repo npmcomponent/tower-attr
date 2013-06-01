@@ -1,11 +1,15 @@
-var attr = 'undefined' === typeof window
-  ? require('..')
-  : require('tower-attr'); // how to do this better?
+
+if ('undefined' === typeof window) {
+  var attr = require('..');
+  var assert = require('assert');
+} else {
+  var attr = require('tower-attr');
+  var assert = require('timoxley-assert');
+}
 
 var Attr = attr.Attr;
 var validator = attr.validator;
 var text = require('tower-text');
-var assert = require('assert');
 
 describe('Attr', function(){
   it('should define', function(){

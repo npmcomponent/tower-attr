@@ -1,12 +1,16 @@
 {
   "name": "tower-attr",
-  "version": "0.1.0pre",
-  "main": "./index.js",
+  "version": "0.1.0",
   "dependencies": {
-    "tower-validator": "~0.1.0pre",
-    "tower-emitter": "~0.1.0pre",
-    "tower-text": "~0.1.0pre",
-    "tower-type": "~0.1.0pre",
+    "tower-validator": "~0.1.0",
+    "tower-emitter": "~0.1.0",
+    "tower-text": "~0.1.0",
+    "tower-type": "~0.1.0",
     "type-component": "0.0.1"
+  },
+  "main": "./index.js",
+  "repository": {
+    "type" : "git",
+    "url" : "http://github.com/tower/attr.git"
   }
 }

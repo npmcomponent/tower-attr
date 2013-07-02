@@ -61,24 +61,23 @@ function Attr(name, type, options){
     }
   }
 
-  // XXX: prop should be named `name`, just tmp fix.
-  this.prop = name.split('.').pop();
   this.name = name;
   this.type = options.type || 'string';
-  // XXX: I18n path, maybe should be
-  // model.user.attr.
-  this.path = options.path || 'attr.' + name;
+  this.path = options.path || 'attr.' + name; // I18n path
+
   if (undefined !== options.value) {
     this.value = options.value;
     this.hasDefaultValue = true;
     this.defaultType = kindof(options.value);
   }
 
-  if (options.validators) this.validators = [];
+  this.validators = options.validators;
+
   if (options.alias) this.aliases = [ options.alias ];
   else if (options.aliases) this.aliases = options.aliases;
 
   // XXX: maybe it should allow any custom thing to be set?
+  if (options.options) this.options = options.options;
 }
 
 /**

@@ -33,15 +33,15 @@ exports.validator = validator;
  * Get an `Attr` instance.
  */
 
-function attr(name, type, options) {
-  return new Attr(name, type, options);
+function attr(name, type, options, path) {
+  return new Attr(name, type, options, path);
 }
 
 /**
  * Instantiate a new `Attr`.
  */
 
-function Attr(name, type, options){
+function Attr(name, type, options, path){
   if (!type) {
     options = { type: 'string' };
   } else {
@@ -63,7 +63,8 @@ function Attr(name, type, options){
 
   this.name = name;
   this.type = options.type || 'string';
-  this.path = options.path || 'attr.' + name; // I18n path
+  // I18n path
+  this.path = path || options.path || 'attr.' + name;
 
   if (undefined !== options.value) {
     this.value = options.value;

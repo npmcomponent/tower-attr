@@ -3,7 +3,6 @@
  * Module dependencies.
  */
 
-var Emitter = require('tower-emitter');
 var validator = require('tower-validator').ns('attr');
 var text = require('tower-text');
 var type = require('tower-type');
@@ -24,11 +23,6 @@ exports = module.exports = attr;
 
 exports.Attr = Attr;
 
-// XXX:
-// module.exports = attr;
-// attr('user.email')
-// attr.on('define', function(name, obj));
-
 /**
  * Expose `validator`.
  */
@@ -36,49 +30,12 @@ exports.Attr = Attr;
 exports.validator = validator;
 
 /**
- * Expose `collection`.
- */
-
-exports.collection = [];
-
-/**
- * Get an `Attr`.
+ * Get an `Attr` instance.
  */
 
 function attr(name, type, options) {
-  if (undefined === type && exports.collection[name])
-    return exports.collection[name];
-
-  var instance = new Attr(name, type, options);
-  exports.collection[name] = instance;
-  exports.collection.push(instance);
-  exports.emit('define', name, instance);
-  return instance;
+  return new Attr(name, type, options);
 }
-
-/**
- * Mixin `Emitter`.
- */
-
-Emitter(exports);
-
-/**
- * Create an `attr` function that
- * just prepends a namespace to every key.
- */
-
-exports.ns = function(ns){
-  function attr(name, type, options) {
-    return exports(ns + '.' + name, type, options);
-  }
-
-  // XXX: copy functions?
-  for (var key in exports) {
-    if ('function' === typeof exports[key])
-      attr[key] = exports[key];
-  }
-  return attr;
-};
 
 /**
  * Instantiate a new `Attr`.
@@ -104,6 +61,8 @@ function Attr(name, type, options){
     }
   }
 
+  // XXX: prop should be named `name`, just tmp fix.
+  this.prop = name.split('.').pop();
   this.name = name;
   this.type = options.type || 'string';
   // XXX: I18n path, maybe should be

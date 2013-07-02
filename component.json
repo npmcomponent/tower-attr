@@ -2,11 +2,10 @@
   "name": "tower-attr",
   "repo": "tower/attr",
   "description": "Tower Attr component",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [],
   "dependencies": {
     "tower/validator": "0.1.0",
-    "tower/emitter": "0.1.0",
     "tower/text": "0.1.0",
     "tower/type": "0.1.0",
     "component/type": "*"

@@ -1,9 +1,8 @@
 {
   "name": "tower-attr",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "tower-validator": "~0.1.0",
-    "tower-emitter": "~0.1.0",
     "tower-text": "~0.1.0",
     "tower-type": "~0.1.0",
     "type-component": "0.0.1"

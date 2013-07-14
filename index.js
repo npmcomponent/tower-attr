@@ -62,6 +62,8 @@ function Attr(name, type, options, path){
   }
 
   this.name = name;
+  // XXX: need to fix
+  this.prop = name.split('.').pop();
   this.type = options.type || 'string';
   // I18n path
   this.path = path || options.path || 'attr.' + name;
@@ -128,10 +130,11 @@ Attr.prototype.validate = function(obj, fn){
  * Typecasting.
  *
  * @param {Mixed} val
+ * @param {Mixed} obj The object instance this attr value is relative to.
  */
 
-Attr.prototype.typecast = function(val){
-  return type(this.type).sanitize(val);
+Attr.prototype.typecast = function(val, obj){
+  return type(this.type).sanitize(val, obj);
 };
 
 /**

@@ -5,9 +5,9 @@
   "version": "0.1.2",
   "keywords": [],
   "dependencies": {
-    "tower/validator": "0.1.1",
+    "tower/validator": "0.1.2",
     "tower/text": "0.1.0",
-    "tower/type": "0.1.1",
+    "tower/type": "0.1.2",
     "component/type": "*"
   },
   "development": {

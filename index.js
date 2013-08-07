@@ -117,9 +117,9 @@ Attr.prototype.validate = function(obj, fn){
   var self = this;
 
   // XXX: part-async-series
-  this.validators.forEach(function(validate){
-    validate(self, obj);
-  });
+  for (var i = 0, n = this.validators.length; i < n; i++) {
+    this.validators[i](self, obj);
+  }
 
   if (fn) fn(); // XXX
 };

@@ -132,6 +132,10 @@ describe('Attr', function(){
       record.title = 'above the max';
       errors = attr.validate(record);
       assert.deepEqual(errors, { max: false });
+
+      record.title = 'just right';
+      errors = attr.validate(record);
+      assert.deepEqual(errors, {});
     });
   });
 });

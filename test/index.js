@@ -101,6 +101,11 @@ describe('Attr', function(){
     assert.deepEqual([ 'x', 'y' ], attr.typecast('x,y'));
   });
 
+  it('should allow arbitrary metadata', function(){
+    var attr = new Attr('pages', { inMenu: true });
+    assert.equal(true, attr.inMenu);
+  });
+
   describe('validators', function(){
     it('should validate present', function(){
       var attr = new Attr('title')

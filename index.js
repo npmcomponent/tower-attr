@@ -65,7 +65,7 @@ function Attr(name, type, options, path){
 
       // if `type` isn't in the list,
       // it's a default value.
-      if (types.defined(type))
+      if (undefined !== options.value || types.defined(type))
         options.type = type;
       else
         options.value = type;

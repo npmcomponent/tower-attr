@@ -8,6 +8,7 @@
     "tower/validator": "*",
     "tower/type": "*",
     "part/is-blank": "*",
+    "part/async-series": "*",
     "component/type": "*"
   },
   "development": {

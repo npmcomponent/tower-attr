@@ -5,6 +5,7 @@
     "tower-validator": "*",
     "tower-type": "*",
     "part-is-blank": "*",
+    "part-async-series": "*",
     "type-component": "0.0.1"
   },
   "main": "./index.js",

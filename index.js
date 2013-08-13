@@ -6,6 +6,8 @@
 var validator = require('tower-validator').ns('attr');
 var types = require('tower-type');
 var kindof = 'undefined' === typeof window ? require('type-component') : require('type');
+var each = require('part-async-series');
+var isBlank = require('part-is-blank');
 var validators = require('./lib/validators');
 
 /**
@@ -52,6 +54,8 @@ function Attr(name, type, options, path){
       // .attr('title', function(){})
       options = { value: type };
       // XXX: array too
+    } else if ('array' === kind) {
+      options = { type: 'array', value: type };
     } else {
       if ('object' !== kindof(options)) {
         options = { value: options };
@@ -85,9 +89,6 @@ function Attr(name, type, options, path){
     case 'date':
       this.apply = dateType;
       break;
-    default:
-      return this.value;
-      break;
   }
 }
 
@@ -96,41 +97,52 @@ function Attr(name, type, options, path){
  */
 
 Attr.prototype.validator = function(key, val){
+  var self = this;
   var assert = validator(key);
+  this.validators || (this.validators = []);
+  var validate;
 
-  (this.validators || (this.validators = []))
-    .push(function validate(attr, obj, errors){
-      if (!assert(attr, obj, val)) {
+  if (4 === assert.length) {
+    validate = function(obj, errors, fn){
+      assert(self, obj, val, function(err){
+        if (err) errors[key] = false;
+      });
+    };
+  } else {
+    validate = function(obj, errors, fn){
+      if (!assert(self, obj, val))
         errors[key] = false;
-        return false;
-      }
-      return true;
-    });
+      fn();
+    }
+  }
+
+  this.validators.push(validate);
 };
 
 Attr.prototype.alias = function(key){
   (this.aliases || (this.aliases = [])).push(key);
 };
 
-Attr.prototype.validate = function(obj, fn){
+Attr.prototype.validate = function(data, errors, fn){
   if (!this.validators) return fn();
 
-  var self = this;
-  // XXX: maybe there's a way to lazily create this so
-  // it doesn't happen for every single attribute.
-  var errors = {};
-
-  // XXX: part-async-series
-  for (var i = 0, n = this.validators.length; i < n; i++) {
-    this.validators[i](self, obj, errors);
+  var validators = this.validators;
+  var i = 0;
+  var validator;
+  
+  function next() {
+    validator = validators[i++];
+    if (validator) {
+      validator(data, errors, next); 
+    } else {
+      if (isBlank(errors))
+        fn();
+      else
+        fn(errors);
+    }
   }
 
-  if (fn) {
-    if (isBlank(errors))
-      fn();
-    else
-      fn(errors);
-  }
+  next();
 
   return errors;
 };

@@ -9,6 +9,7 @@ if ('undefined' === typeof window) {
 
 var Attr = attr.Attr;
 var validator = attr.validator;
+var noop = function(){};
 
 describe('Attr', function(){
   it('should define', function(){
@@ -106,17 +107,26 @@ describe('Attr', function(){
     assert.equal(true, attr.inMenu);
   });
 
+  it('should allow simpler default value', function(){
+    var attr = new Attr('title', 'Hello World!');
+    assert.equal(attr.apply(), 'Hello World!');
+
+    var attr = new Attr('tags', [ 'one', 'two' ]);
+    assert.equal(attr.type, 'array');
+    assert.equal(attr.apply().join(' '), 'one two');
+  });
+
   describe('validators', function(){
     it('should validate present', function(){
       var attr = new Attr('title')
       attr.validator('present');
 
       var record = { title: 'hello' };
-      var errors = attr.validate(record);
+      var errors = attr.validate(record, {}, noop);
       assert.deepEqual(errors, {});
 
       record.title = null;
-      errors = attr.validate(record);
+      errors = attr.validate(record, {}, noop);
       assert.deepEqual(errors, { present: false });
     });
 
@@ -126,15 +136,15 @@ describe('Attr', function(){
       attr.validator('max', 10);
 
       var record = { title: 'no' };
-      var errors = attr.validate(record);
+      var errors = attr.validate(record, {}, noop);
       assert.deepEqual(errors, { min: false });
 
       record.title = 'above the max';
-      errors = attr.validate(record);
+      errors = attr.validate(record, {}, noop);
       assert.deepEqual(errors, { max: false });
 
       record.title = 'just right';
-      errors = attr.validate(record);
+      errors = attr.validate(record, {}, noop);
       assert.deepEqual(errors, {});
     });
   });

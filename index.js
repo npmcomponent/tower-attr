@@ -4,12 +4,9 @@
  */
 
 var validator = require('tower-validator').ns('attr');
-var text = require('tower-text');
-var type = require('tower-type');
+var types = require('tower-type');
 var kindof = 'undefined' === typeof window ? require('type-component') : require('type');
 var validators = require('./lib/validators');
-
-text('attr', 'Invalid attribute: {{name}}');
 
 /**
  * Expose `attr`.
@@ -42,45 +39,56 @@ function attr(name, type, options, path) {
  */
 
 function Attr(name, type, options, path){
-  if (!type) {
+  if (undefined === type) {
+    // .attr('title')
     options = { type: 'string' };
   } else {
     var kind = kindof(type);
+
     if ('object' === kind) {
+      // .attr('title', { value: 'Hello World', type: 'string' })
       options = type;
     } else if ('function' === kind) {
+      // .attr('title', function(){})
       options = { value: type };
       // XXX: array too
     } else {
       if ('object' !== kindof(options)) {
         options = { value: options };
       } else {
-        options || (options = {}); 
+        options || (options = {});
       }
-      options.type = type;
+
+      // if `type` isn't in the list,
+      // it's a default value.
+      if (types.defined(type))
+        options.type = type;
+      else
+        options.value = type;
     }
   }
 
   this.name = name;
-  // XXX: need to fix
-  this.prop = name.split('.').pop();
-  this.type = options.type || 'string';
-  // I18n path
-  this.path = path || options.path || 'attr.' + name;
+  this.path = path || 'attr.' + name;
 
-  if (undefined !== options.value) {
-    this.value = options.value;
-    this.hasDefaultValue = true;
-    this.defaultType = kindof(options.value);
+  for (var key in options) this[key] = options[key];
+  if (!this.type) this.type = 'string';
+  
+  // override `.apply` for complex types
+  switch (kindof(this.value)) {
+    case 'function':
+      this.apply = functionType;
+      break;
+    case 'array':
+      this.apply = arrayType;
+      break;
+    case 'date':
+      this.apply = dateType;
+      break;
+    default:
+      return this.value;
+      break;
   }
-
-  this.validators = options.validators;
-
-  if (options.alias) this.aliases = [ options.alias ];
-  else if (options.aliases) this.aliases = options.aliases;
-
-  // XXX: maybe it should allow any custom thing to be set?
-  if (options.options) this.options = options.options;
 }
 
 /**
@@ -89,21 +97,14 @@ function Attr(name, type, options, path){
 
 Attr.prototype.validator = function(key, val){
   var assert = validator(key);
-  // XXX: need some sort of error handling so it's
-  // easier to tell `assert` is undefined.
 
-  // lazily instantiate validators
   (this.validators || (this.validators = []))
-    .push(function validate(attr, obj, fn){
+    .push(function validate(attr, obj, errors){
       if (!assert(attr, obj, val)) {
-        // XXX: hook into `tower-inflector` for I18n
-        var error = text.has(attr.path)
-          ? text(attr.path).render(attr)
-          : text('attr').render(attr);
-
-        obj.errors[attr.name] = error;
-        obj.errors.push(error);
+        errors[key] = false;
+        return false;
       }
+      return true;
     });
 };
 
@@ -115,13 +116,23 @@ Attr.prototype.validate = function(obj, fn){
   if (!this.validators) return fn();
 
   var self = this;
+  // XXX: maybe there's a way to lazily create this so
+  // it doesn't happen for every single attribute.
+  var errors = {};
 
   // XXX: part-async-series
   for (var i = 0, n = this.validators.length; i < n; i++) {
-    this.validators[i](self, obj);
+    this.validators[i](self, obj, errors);
   }
 
-  if (fn) fn(); // XXX
+  if (fn) {
+    if (isBlank(errors))
+      fn();
+    else
+      fn(errors);
+  }
+
+  return errors;
 };
 
 /**
@@ -134,7 +145,7 @@ Attr.prototype.validate = function(obj, fn){
  */
 
 Attr.prototype.typecast = function(val, obj){
-  return type(this.type).sanitize(val, obj);
+  return types(this.type).sanitize(val, obj);
 };
 
 /**
@@ -145,20 +156,27 @@ Attr.prototype.typecast = function(val, obj){
  */
 
 Attr.prototype.apply = function(obj){
-  if (!this.hasDefaultValue) return;
-
-  // XXX: this should be computed in the constructor.
-  switch (this.defaultType) {
-    case 'function':
-      return this.value(obj);
-      break;
-    case 'array':
-      return this.value.concat();
-      break;
-    default:
-      return this.value;
-      break;
-  }
+  return this.value;
 };
+
+/**
+ * Types for applying default values.
+ */
+
+function functionType(obj) {
+  return this.value(obj);
+}
+
+function arrayType(obj) {
+  return this.value.concat();
+}
+
+function dateType(obj) {
+  return new Date(this.value.getTime());
+}
+
+/**
+ * Define basic validators.
+ */
 
 validators(exports);

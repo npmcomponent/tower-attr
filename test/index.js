@@ -9,14 +9,14 @@ if ('undefined' === typeof window) {
 
 var Attr = attr.Attr;
 var validator = attr.validator;
-var text = require('tower-text');
 
 describe('Attr', function(){
   it('should define', function(){
-    var attr = new Attr('title', 'string');
+    var attr = new Attr('title', 'string', {}, 'some.nested.path.title');
     
     assert('title' === attr.name);
     assert('string' === attr.type);
+    assert('some.nested.path.title' === attr.path);
   });
 
   it('should lazily instantiate validators', function(){
@@ -102,23 +102,31 @@ describe('Attr', function(){
   });
 
   describe('validators', function(){
-    before(function(){
-      text('attr', 'Invalid attribute: {{name}}');
-    });
-
     it('should validate present', function(){
       var attr = new Attr('title')
       attr.validator('present');
 
-      var record = { get: function() { return this.title }, errors: [] };
-      record.title = 'hello';
-      attr.validate(record);
-      assert(0 === record.errors.length);
+      var record = { title: 'hello' };
+      var errors = attr.validate(record);
+      assert.deepEqual(errors, {});
 
       record.title = null;
-      attr.validate(record);
-      assert(1 === record.errors.length);
-      assert('Invalid attribute: title' === record.errors['title']);
+      errors = attr.validate(record);
+      assert.deepEqual(errors, { present: false });
+    });
+
+    it('should validate min/max', function(){
+      var attr = new Attr('title')
+      attr.validator('min', 3);
+      attr.validator('max', 10);
+
+      var record = { title: 'no' };
+      var errors = attr.validate(record);
+      assert.deepEqual(errors, { min: false });
+
+      record.title = 'above the max';
+      errors = attr.validate(record);
+      assert.deepEqual(errors, { max: false });
     });
   });
 });

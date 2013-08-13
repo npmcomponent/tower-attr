@@ -6,8 +6,8 @@
   "keywords": [],
   "dependencies": {
     "tower/validator": "*",
-    "tower/text": "*",
     "tower/type": "*",
+    "part/is-blank": "*",
     "component/type": "*"
   },
   "development": {

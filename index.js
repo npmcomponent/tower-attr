@@ -79,7 +79,9 @@ function Attr(name, type, options, path){
   if (!this.type) this.type = 'string';
   
   // override `.apply` for complex types
-  switch (kindof(this.value)) {
+  this.valueType = kindof(this.value);
+
+  switch (this.valueType) {
     case 'function':
       this.apply = functionType;
       break;
@@ -175,8 +177,8 @@ Attr.prototype.apply = function(obj){
  * Types for applying default values.
  */
 
-function functionType(obj) {
-  return this.value(obj);
+function functionType(obj, val) {
+  return this.value(obj, val);
 }
 
 function arrayType(obj) {

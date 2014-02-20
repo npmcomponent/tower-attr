@@ -4,10 +4,10 @@
  */
 
 var validator = require('tower-validator').ns('attr');
-var types = require('tower-type');
-var kindof = 'undefined' === typeof window ? require('type-component') : require('type');
-var each = require('part-async-series');
-var isBlank = require('part-is-blank');
+// commented out by npm-component: var types = require('tower-type');
+var kindof = 'undefined' === typeof window ? require('type-component') : require('component-type');
+// commented out by npm-component: var each = require('part-async-series');
+// commented out by npm-component: var isBlank = require('part-is-blank');
 var validators = require('./lib/validators');
 
 /**

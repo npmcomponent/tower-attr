@@ -1,16 +1,13 @@
 {
   "name": "tower-attr",
-  "version": "0.1.2",
+  "description": "Tower Attr component",
+  "version": "0.1.4",
+  "keywords": [],
   "dependencies": {
-    "tower-validator": "*",
-    "tower-type": "*",
-    "part-is-blank": "*",
-    "part-async-series": "*",
-    "type-component": "0.0.1"
+    "tower-validator": "git://github.com/npmcomponent/tower-validator.git",
+    "component-type": "git://github.com/npmcomponent/component-type.git",
+    "part-is-blank": "git://github.com/npmcomponent/part-is-blank.git",
+    "part-async-series": "git://github.com/npmcomponent/part-async-series.git"
   },
-  "main": "./index.js",
-  "repository": {
-    "type" : "git",
-    "url" : "http://github.com/tower/attr.git"
-  }
+  "license": "MIT"
 }
